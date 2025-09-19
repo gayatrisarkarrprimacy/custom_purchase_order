@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="purchase_order_form_view_type" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="purchase_type" readonly="1" force_save="1"
+                    widget="badge"
+                    decoration-success="purchase_type == 'domestic'"
+                    decoration-info="purchase_type == 'import'"
+                />
+            </xpath>
+<!--            <field name="partner_id"/>-->
+        </field>
+    </record>
+
+    <record id="action_purchase_order_domestic" model="ir.actions.act_window">
+        <field name="name">Domestic Purchase Orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_purchase_type': 'domestic'}</field>
+        <field name="domain">[('purchase_type', '=', 'domestic')]</field>
+    </record>
+
+    <record id="action_purchase_order_import" model="ir.actions.act_window">
+        <field name="name">Imported Purchase Orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_purchase_type': 'import'}</field>
+        <field name="domain">[('purchase_type', '=', 'import')]</field>
+    </record>
+
+    <menuitem id="menu_purchase_order_domestic"
+              name="Domestic Orders"
+              parent="purchase.menu_procurement_management"
+              sequence="1"
+              action="action_purchase_order_domestic"/>
+
+    <menuitem id="menu_purchase_order_import"
+              name="Imported Orders"
+              parent="purchase.menu_procurement_management"
+              sequence="2"
+              action="action_purchase_order_import"/>
+
+    <record id="purchase.menu_purchase_rfq" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="purchase.menu_purchase_form_action" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+</odoo>
